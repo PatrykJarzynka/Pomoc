@@ -73,6 +73,7 @@ app.patch(
           image.resize(250, 250).write(temporaryName);
         })
         .catch((err) => {
+          fs.unlink(temporaryName);
           next(err);
         });
 
@@ -80,13 +81,6 @@ app.patch(
     } catch (err) {
       await fs.unlink(temporaryName);
       return next(err);
-    }
-
-    const isValidImage = await isImage(fileName);
-
-    if (!isValidImage) {
-      await fs.unlink(fileName);
-      return res.status(400).json({ message: "this is not a photo" });
     }
 
     const result = await User.findOneAndUpdate(
