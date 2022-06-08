@@ -72,14 +72,13 @@ app.patch(
         .then((image) => {
           image.resize(250, 250).write(temporaryName);
         })
-        .catch((err) => {
-          fs.unlink(temporaryName);
+        .catch(async (err) => {
+          awaitfs.unlink(temporaryName);
           next(err);
         });
 
       await fs.rename(temporaryName, fileName);
     } catch (err) {
-      await fs.unlink(temporaryName);
       return next(err);
     }
 
